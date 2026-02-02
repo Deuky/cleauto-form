@@ -6,7 +6,7 @@ on:
       - '**'
 
 jobs:
-  cross-repo-pipeline:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
