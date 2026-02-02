@@ -11,6 +11,6 @@ jobs:
       - name: Build Central
         uses: amandastecz/pipeline-trigger@v1.1
         with:
-          pat-token: ${{ secrets.PAT_TOKEN }} # add a secret called PAT_TOKEN
-          owner: ${{ vars.owner }}
-          repo: ${{ vars.repo }}
+          pat-token: ${{ secrets.PAT_TOKEN }}
+          owner: ${{ vars.OWNER }}
+          repo: ${{ vars.REPO }}
