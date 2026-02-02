@@ -1,4 +1,4 @@
-name: Dispatch
+name: Build & Package
 on:
   push:
     branches:
@@ -10,9 +10,12 @@ jobs:
   build:
     name: Build & Package
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      packages: write
+      
     steps:
-      - name: Set up environment
-        run: |
-          echo "RUN";
-
+       - name: checkout
+         uses: actions/checkout@6.4
+         
+         
