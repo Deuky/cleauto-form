@@ -14,4 +14,5 @@ jobs:
     steps:
       - name: Set up environment
         run: |
-          echo "RUN"
+          echo "RUN";
+
