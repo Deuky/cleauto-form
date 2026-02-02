@@ -1,21 +1,51 @@
-name: Build & Package
+name: CleAuto - Build & Notification
+
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
-  repository_dispatch: 
-  
+    tags:
+      - '**'
+
 jobs:
   build:
-    name: Build & Package
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      
-    steps:
-       - name: checkout
-         uses: actions/checkout@6.4
-         
-         
+
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set env
+        run: |
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo "GHCR_REPOSITORY=deuky/cleauto-form" >> $GITHUB_ENV
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: base
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/base:${{ env.RELEASE_VERSION }}
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/base:latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: artifact
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/artifact:${{ env.RELEASE_VERSION }}
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/artifact:latest

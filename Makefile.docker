@@ -1,0 +1,13 @@
+configure: Makefile
+
+build:
+	npm install
+
+compile:
+	npm run build
+
+start:
+	npm run dev
+
+Makefile:
+	cp -v $@.$(ENVIRONMENT) Makefile

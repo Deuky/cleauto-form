@@ -1,0 +1,3 @@
+services:
+  form:
+    image: cleauto-form:latest
