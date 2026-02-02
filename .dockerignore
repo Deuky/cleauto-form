@@ -1,0 +1,9 @@
+*
+!public
+!src
+!eslint.config.js
+!index.html
+!Makefile.docker
+!package-lock.json
+!package.json
+!vite.config.js

@@ -1,0 +1,7 @@
+services:
+  form:
+    image: cleauto-form
+    build:
+      target: ${BUILD_TARGET:-base}
+    volumes:
+      - .:/app

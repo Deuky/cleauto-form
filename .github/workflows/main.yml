@@ -1,16 +1,55 @@
-name: 
+name: CleAuto - Build & Notification
+
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '**'
 
 jobs:
   cross-repo-pipeline:
     runs-on: ubuntu-latest
-    steps: #here starts the action's setup
-      - name: Build Central
-        uses: amandastecz/pipeline-trigger@v1.1
+    permissions:
+      contents: read
+      packages: write
+
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set env
+        run: |
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          pat-token: ${{ secrets.PAT_TOKEN }}
-          owner: ${{ vars.OWNER }}
-          repo: ${{ vars.REPO }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: base
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/base:${{ env.RELEASE_VERSION }}
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/base:latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: artifact
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/artifact:${{ env.RELEASE_VERSION }}
+            ghcr.io/${{ env.GHCR_REPOSITORY }}/artifact:latest
