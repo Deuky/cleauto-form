@@ -1,26 +1,53 @@
+import { useState } from "react";
+import YesNoToggle from "../YesNoToggle"
+
 export default function StepRequest({ register }) {
+  const [repairKey, setRepairKey] = useState(false);
+  const [copyKey, setCopyKey] = useState(false);
+  const [keyWorks, setKeyWorks] = useState(false);
+  const [allKeyLost, setSetAllKeyLost] = useState(false);
+  const [hasCarOpened, setHasCarOpened] = useState(false);
+
   return (
     <>
       <h2>La demande</h2>
+      <div className="request-wrap">
+          <YesNoToggle
+            value={repairKey}
+            onChange={setRepairKey}
+            label="Réparation de la clef"
+          />
 
-      <select {...register("keyType", { required: true })}>
-        <option value="">Type de clé</option>
-        <option value="remote">Clé avec télécommande</option>
-        <option value="simple">Clé sans télécommande</option>
-        <option value="proximity">Proximity key</option>
-      </select>
+          <YesNoToggle
+            value={copyKey}
+            onChange={setCopyKey}
+            label="Duplication de la clef"
+          />
 
-      <select {...register("location", { required: true })}>
-        <option value="">Lieu de programmation</option>
-        <option value="atelier">Atelier</option>
-        <option value="domicile">À domicile</option>
-      </select>
+          {
+            copyKey ?
+              <YesNoToggle
+                value={keyWorks}
+                onChange={setKeyWorks}
+                label="Une clef fonctionnelle ?"
+              /> : <></>
+          }
 
-      <select {...register("hasKey", { required: true })}>
-        <option value="">Clé existante ?</option>
-        <option value="yes">Oui</option>
-        <option value="no">Non (all keys lost)</option>
-      </select>
+          <YesNoToggle
+            value={allKeyLost}
+            onChange={setSetAllKeyLost}
+            label="Depanage: toutes clefs perdues"
+          />
+          {
+            allKeyLost ?
+              <YesNoToggle
+                value={hasCarOpened}
+                onChange={setHasCarOpened}
+                label="Voiture ouverte ?"
+              />
+              : <></>
+          }
+      </div>
     </>
   );
 }

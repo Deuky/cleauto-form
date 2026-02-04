@@ -6,7 +6,8 @@ export default function Stepper({ steps, currentStep }) {
           key={step.id}
           className={`step ${index <= currentStep ? "active" : ""}`}
         >
-          {step.title}
+          <span>{step.title}</span>
+          <img src={step.img} />
         </div>
       ))}
     </div>
