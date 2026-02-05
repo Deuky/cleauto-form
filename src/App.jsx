@@ -85,7 +85,7 @@ export default function App() {
     form.append('agreement[rgpd][url]', document.URL);
 
     fetch(
-      "http://0.0.0.0:3003/mailer",
+      "/mailer",
       {
         method: "POST",
         body: form
