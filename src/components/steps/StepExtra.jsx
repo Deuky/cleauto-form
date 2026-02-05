@@ -1,5 +1,4 @@
-export default function StepExtra({ register, watch }) {
-  const location = watch("location");
+export default function StepExtra({ register }) {
 
   return (
     <>
@@ -7,7 +6,8 @@ export default function StepExtra({ register, watch }) {
 
       <textarea
         placeholder="Informations complémentaires"
-        {...register("extraInfo")}
+        maxLength={250}
+        {...register("extraInfo", {maxLength: 250})}
       />
     </>
   );

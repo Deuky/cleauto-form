@@ -114,6 +114,7 @@ p {
   justify-content: space-between;
   gap: 12px;
   margin-top: 24px;
+  margin-bottom: 12px;
 }
 
 button {
@@ -131,12 +132,12 @@ button:active {
 button[type="button"] {
   background: #e5e7eb;
   color: #111827;
-  width: 40%;
+  width: 33%;
   max-width: 200px;
 
-      white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 button[type="button"]:hover {
@@ -197,6 +198,7 @@ input[type="file"] {
   text-align: center;
   width: 33%;
   transition: background 0.2s, transform 0.1s;
+  max-width: 200px;
 }
 
 /* =========================
@@ -205,7 +207,7 @@ input[type="file"] {
 
 .yesno-toggle {
   position: relative;
-  width: 160px;
+  width: 29%;
   height: 42px;
   background: #1e6fff;
   border-radius: 999px;
@@ -237,6 +239,10 @@ input[type="file"] {
   background: white;
   border-radius: 999px;
   transition: transform 0.25s ease;
+}
+
+.yesno-toggle-input>span {
+  width: 70%;
 }
 
 /* Position NON */
@@ -314,7 +320,27 @@ input[name="firstRegistration"] {
   }
 
   .yesno-toggle {
-    width: 120px;
     height: 35px;
   }
+}
+
+.agreement {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  text-align: justify;
+}
+
+.agreement span {
+  width: 90%; 
+  font-size: small;
+}
+
+.header {
+  text-align: center
+}
+
+.header img {
+  height: 85px;
+  margin-bottom: 10px;
 }

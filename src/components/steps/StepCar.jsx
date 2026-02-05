@@ -1,16 +1,52 @@
 import { useRef, useState } from "react";
 import YesNoToggle from "../YesNoToggle"
 
-export default function StepCar({ register, errors }) {
-  const cameraInputRef = useRef(null);
-  const galleryInputRef = useRef(null);
-  const [preview, setPreview] = useState(null);
-  const [handFree, setHandFree] = useState(false);
+export default function StepCar({ register, errors, isHandFree, setValue }) {
+  const inputRefVIN = useRef(null);
+  const inputRefKey = useRef(null);
+  const [previewVIN, setPreviewVIN] = useState(null);
+  const [previewKey, setPreviewKey] = useState(null);
 
-  const handleFile = (file) => {
+  const handleFileVIN = (file) => {
     if (!file) return;
 
-    setPreview(URL.createObjectURL(file));
+    setPreviewVIN(URL.createObjectURL(file));
+  };
+
+  const handleFileKey = (file) => {
+    if (!file) return;
+
+    setPreviewKey(URL.createObjectURL(file));
+  };
+
+  const registerWithRef = (name, ref, preview) => {
+    let r = register(name);
+    let initialRef = r.ref;
+    let initialChange = r.onChange;
+
+    r.ref = (el) => {
+      initialRef(el);
+      ref.current = el;
+    };
+
+    if (preview) {
+      r.onChange = (e) => {
+        preview(e.target.files[0])
+        initialChange(e);
+      };
+    }
+
+    return r;
+  };
+
+  const openCamera = (input) => {
+    input.current.capture = 'environment';
+    input.current.click();
+  };
+
+  const openGallery = (input) => {
+    input.current.capture = undefined;
+    input.current.click();
   };
 
   return (
@@ -24,36 +60,25 @@ export default function StepCar({ register, errors }) {
 
         <button
           type="button"
-          onClick={() => cameraInputRef.current.click()}
+          onClick={() => openCamera(inputRefVIN)}
         ><img src="/photo.svg" /></button>
+
         <button
           type="button"
-          onClick={() => galleryInputRef.current.click()}
+          onClick={() => openGallery(inputRefVIN)}
         ><img src="/gallery.svg" /></button>
         <div className="preview">
           {
-            preview ?
-                <img src={preview}  alt="VIN preview" />
+            previewVIN ?
+                <img src={previewVIN}  alt="VIN preview" />
               : <></>
           }
         </div>
         <input
-          ref={cameraInputRef}
           type="file"
-          name="VIN"
-          accept="image/*"
-          capture="environment"
-          hidden
-          onChange={(e) => handleFile(e.target.files[0])}
-        />
-
-        <input
-          ref={galleryInputRef}
-          type="file"
-          name="VIN"
           accept="image/*"
           hidden
-          onChange={(e) => handleFile(e.target.files[0])}
+          {...registerWithRef('VIN', inputRefVIN, handleFileVIN)}
         />
         
       </div>
@@ -62,33 +87,49 @@ export default function StepCar({ register, errors }) {
 
       <input
         placeholder="Marque"
-        {...register("brand", { required: true })}
+        {...register("brand", { required: "Champ requis" })}
       />
+      {errors.brand && <p> {errors.brand.message} </p> }
 
       <input
         placeholder="Modèle"
-        {...register("model", { required: true })}
+        {...register("model", { required: "Champ requis"  })}
       />
+      {errors.model && <p> {errors.model.message} </p> }
 
-      <input
-        placeholder="VIN"
-        {...register("model", { required: true })}
-      />
+      {
+        previewVIN ?
+          <></> :
+          <>
+            <input
+              placeholder="VIN"
+              maxLength={17}
+              {...register("VINCode", {
+                pattern: {
+                  value: /^[A-HJ-NPR-Z0-9]{17}$/i,
+                  message: "Numéro de châssis (VIN) invalide"
+                }
+              })}
+            />
+            {errors['VINCode'] && <p> {errors['VINCode'].message} </p> }
+          </> 
+      }
 
-      <select {...register("fuel", { required: true })}>
+      <select {...register("fuel", { required: "Champ requis" })}>
         <option value="">Carburant</option>
         <option value="diesel">Diesel</option>
         <option value="essence">Essence</option>
         <option value="hybride">Hybride</option>
         <option value="electrique">Électrique</option>
       </select>
+      {errors.fuel && <p> {errors.fuel.message} </p> }
 
       <input
         type="date"
-        placeholder="test"
         {...register("firstRegistration")}
       />
       <label className="input-notice">* premier imatriculation</label>
+
 
       <h3> Photo de la clef <span>🔑</span></h3>
 
@@ -96,43 +137,33 @@ export default function StepCar({ register, errors }) {
 
         <button
           type="button"
-          onClick={() => cameraInputRef.current.click()}
+          onClick={() => openCamera(inputRefKey)}
         ><img src="/photo.svg" /></button>
         <button
           type="button"
-          onClick={() => galleryInputRef.current.click()}
+          onClick={() => openGallery(inputRefKey)}
         ><img src="/gallery.svg" /></button>
         <div className="preview">
           {
-            preview ?
-                <img src={preview}  alt="VIN preview" />
+            previewKey ?
+                <img src={previewKey}  alt="preview Key" />
               : <></>
           }
         </div>
         <input
-          ref={cameraInputRef}
           type="file"
-          name="VIN"
           accept="image/*"
-          capture="environment"
           hidden
-          onChange={(e) => handleFile(e.target.files[0])}
+          { ...registerWithRef('key', inputRefKey, handleFileKey) }
         />
 
-        <input
-          ref={galleryInputRef}
-          type="file"
-          name="VIN"
-          accept="image/*"
-          hidden
-          onChange={(e) => handleFile(e.target.files[0])}
-        />
-        
       </div>
 
       <YesNoToggle
-        value={handFree}
-        onChange={(val) => setHandFree(val)}
+        value={isHandFree}
+        onChange={(e, val) => {
+          setValue("isHandFree", val);
+        }}
         label="Main libre ?"
       />
     </>

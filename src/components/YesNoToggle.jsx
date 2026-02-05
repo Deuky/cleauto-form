@@ -1,25 +1,26 @@
 export function YesNoToggleButton({ value, onChange }) {
+
   return (
     <div
       className={`yesno-toggle ${value ? "yes" : "no"}`}
-      onClick={() => onChange(!value)}
+      onClick={(e) => onChange(e, !value)}
     >
       <div className="slider" />
       <span className="label yes">Oui</span>
-      <span className="label no">Non</span>      
+      <span className="label no">Non</span>  
     </div>
   );
 }
 
 export default function YesNoToggle({value, onChange, label}) {
   return (
-    <div class="yesno-toggle-input">
+    <label className="yesno-toggle-input" onClick={(e) => onChange(e, !value)}>
       <YesNoToggleButton 
         value={value}
         onChange={onChange}
       />
 
-      <label>{label}</label>
-    </div>
+      <span>{label}</span>
+    </label>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import StepPersonal from "./components/steps/StepPersonal";
@@ -22,8 +22,20 @@ export default function App() {
     handleSubmit,
     watch,
     trigger,
+    setValue,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
+
+  const isHandFree = watch('isHandFree', false);
+  
+  const repairKeyRequest = watch('repairKeyRequest', false);
+  const copyKeyRequest = watch('copyKeyRequest', false);
+  const hasKeyWorks = watch('hasKeyWorks', false);
+  const allKeyLostRequest = watch('allKeyLostRequest', false);
+  const hasCarOpened = watch('hasCarOpened', false);
+  const agreementContent = watch('agreementContent', null);
+
+  const agreementContentRef = useRef(null);
 
   const onNext = async () => {
     const valid = await trigger();
@@ -35,6 +47,7 @@ export default function App() {
       return;
     }
     setCurrentStep((s) => s - 1); 
+    setValue('agreementStatus', false);
   }
 
   const onSubmit = (data) => {
@@ -42,23 +55,37 @@ export default function App() {
     form.append('personal[name]', data.fullName);
     form.append('personal[phone]', data.phone);
     form.append('personal[email]', data.email);
+
     form.append('car[brand]', data.brand);
     form.append('car[model]', data.model);
     form.append('car[fuel]', data.fuel);
-    form.append('car[VIN]', data.vin);
     form.append('car[first-registration]', data.firstRegistration);
-    form.append('request[key-type]', data.keyType);
-    form.append('request[target-intervention]', data.location);
-    form.append('request[keys]', data.hasKey);
-    form.append('extra[address]', data.address);
-    form.append('extra[information]', data.extraInfo);
-
-    for(let i = 0; i < data.keyPhoto.length; i++){
-      form.append('extra[attachments][]', data.keyPhoto.item(i));
+    if (data.VIN && data.VIN.length) {
+      form.append('car[attachments][]', data.VIN[0]);
+    } else {
+      form.append('car[VIN]', data.VINCode);
     }
 
+    form.append('key[is-hand-free]', data.isHandFree || false);
+    if (data.key && data.key.length) {
+      form.append('key[attachments][]', data.key[0]);
+    }
+
+    form.append('request[repair-key]', data.repairKeyRequest || false);
+    form.append('request[copy-key]', data.copyKeyRequest || false);
+    form.append('request[key-works]', data.hasKeyWorks || false);
+    form.append('request[all-key-lost]', data.allKeyLostRequest || false);
+    form.append('request[car-opened]', data.hasCarOpened || false);
+
+    form.append('extra[informations]', data.extraInfo);
+
+    form.append('agreement[rgpd][status]', data.agreementStatus);
+    form.append('agreement[rgpd][content]', data.agreementContent);
+    form.append('agreement[rgpd][request-date]', new Date().toLocaleString());
+    form.append('agreement[rgpd][url]', document.URL);
+
     fetch(
-      "/mailer",
+      "http://0.0.0.0:3003/mailer",
       {
         method: "POST",
         body: form
@@ -69,7 +96,7 @@ export default function App() {
   return (
     <>
       <div className="container">
-        <div style={{'text-align': "center"}}><img style={{height: "85px", 'margin-bottom': "10px"}} src="/cleauto-logo.png" /></div>
+        <div className="header"><img src="/cleauto-logo.png" /></div>
         <Stepper steps={steps} currentStep={currentStep} />
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,11 +105,14 @@ export default function App() {
           )}
 
           {currentStep === 1 && (
-            <StepCar register={register} errors={errors} />
+            <StepCar 
+              register={register} errors={errors} isHandFree={isHandFree} setValue={setValue}
+            />
           )}
 
           {currentStep === 2 && (
-            <StepRequest register={register} errors={errors} />
+            <StepRequest register={register} errors={errors} setValue={setValue} repairKeyRequest={repairKeyRequest} copyKeyRequest={copyKeyRequest} hasKeyWorks={hasKeyWorks} allKeyLostRequest={allKeyLostRequest} hasCarOpened={hasCarOpened}
+/>
           )}
 
           {currentStep === 3 && (
@@ -93,13 +123,23 @@ export default function App() {
           )}
 
           {currentStep == (steps.length-1) ? (
-            <div style={{display: "flex", 'align-items': "flex-start", 'justify-content': "space-around", 'text-align': "justify"}}>
-              <input type="checkbox" style={{width: "inherit", 'margin-top': "3px"}} />
-              <span style={{width: "90%", 'font-size': "small"}}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par Cleauto pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
-            </div>
+            <>
+              <label className="agreement">
+                  <input 
+                    type="checkbox" 
+                    onClick={(el) => {
+                      setValue('agreementContent', el.currentTarget.checked ? agreementContentRef.current.innerHTML : "");
+                    }}
+                    { ... register('agreementStatus', { required: "Acceptez le traitement des informations" }) }
+                  />
+                  <span ref={agreementContentRef}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par Cleauto pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
+              </label>
+              { errors.agreementStatus && <><br /><p> { errors.agreementStatus.message } </p></> }
+            </>
+
             ): <></>}
 
-          <div className="buttons" style={{ 'margin-bottom': "12px" }}>
+          <div className="buttons">
             <button type="button" onClick={onPrev}>
               ← Précédent
             </button>
@@ -110,7 +150,7 @@ export default function App() {
               </button>
             ) : (
               <>
-                <button type="submit" style={{cursor: "not-allowed", 'pointer-events': "none", 'background-color': "gray"}}>
+                <button type="submit">
                   Envoyer la demande
                 </button>
               </>

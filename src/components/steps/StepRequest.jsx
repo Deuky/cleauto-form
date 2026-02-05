@@ -1,48 +1,52 @@
 import { useState } from "react";
 import YesNoToggle from "../YesNoToggle"
 
-export default function StepRequest({ register }) {
-  const [repairKey, setRepairKey] = useState(false);
-  const [copyKey, setCopyKey] = useState(false);
-  const [keyWorks, setKeyWorks] = useState(false);
-  const [allKeyLost, setSetAllKeyLost] = useState(false);
-  const [hasCarOpened, setHasCarOpened] = useState(false);
-
+export default function StepRequest({ register, setValue, repairKeyRequest, copyKeyRequest, hasKeyWorks, allKeyLostRequest, hasCarOpened }) {
   return (
     <>
       <h2>La demande</h2>
       <div className="request-wrap">
           <YesNoToggle
-            value={repairKey}
-            onChange={setRepairKey}
+            value={repairKeyRequest}
+            onChange={(e, val) => {
+              setValue("repairKeyRequest", val);
+            }}
             label="Réparation de la clef"
           />
 
           <YesNoToggle
-            value={copyKey}
-            onChange={setCopyKey}
+            value={copyKeyRequest}
+            onChange={(e, val) => {
+              setValue("copyKeyRequest", val);
+            }}
             label="Duplication de la clef"
           />
 
           {
-            copyKey ?
+            copyKeyRequest ?
               <YesNoToggle
-                value={keyWorks}
-                onChange={setKeyWorks}
+                value={hasKeyWorks}
+                onChange={(e, val) => {
+                  setValue("hasKeyWorks", val);
+                }}
                 label="Une clef fonctionnelle ?"
               /> : <></>
           }
 
           <YesNoToggle
-            value={allKeyLost}
-            onChange={setSetAllKeyLost}
+            value={allKeyLostRequest}
+            onChange={(e, val) => {
+              setValue("allKeyLostRequest", val);
+            }}
             label="Depanage: toutes clefs perdues"
           />
           {
-            allKeyLost ?
+            allKeyLostRequest ?
               <YesNoToggle
                 value={hasCarOpened}
-                onChange={setHasCarOpened}
+                onChange={(e, val) => {
+                  setValue("hasCarOpened", val);
+                }}
                 label="Voiture ouverte ?"
               />
               : <></>
