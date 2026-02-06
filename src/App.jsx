@@ -15,7 +15,8 @@ const steps = [
 ];
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(3);
+  const [send, setSend] = useState(false);
 
   const {
     register,
@@ -50,7 +51,7 @@ export default function App() {
     setValue('agreementStatus', false);
   }
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     let form = new FormData();
     form.append('personal[name]', data.fullName);
     form.append('personal[phone]', data.phone);
@@ -90,79 +91,99 @@ export default function App() {
         method: "POST",
         body: form
       }
-    );
+    ).then(function(response, b, c) {
+      const result = response.json().then(function(r) {
+        setSend(true);
+        debugger;
+      });
+    });
+
+    debugger;
   };
 
   return (
     <>
       <div className="container">
         <div className="header"><img src="/cleauto-logo.png" /></div>
-        <Stepper steps={steps} currentStep={currentStep} />
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {currentStep === 0 && (
-            <StepPersonal register={register} errors={errors} />
-          )}
-
-          {currentStep === 1 && (
-            <StepCar 
-              register={register} errors={errors} isHandFree={isHandFree} setValue={setValue}
-            />
-          )}
-
-          {currentStep === 2 && (
-            <StepRequest register={register} errors={errors} setValue={setValue} repairKeyRequest={repairKeyRequest} copyKeyRequest={copyKeyRequest} hasKeyWorks={hasKeyWorks} allKeyLostRequest={allKeyLostRequest} hasCarOpened={hasCarOpened}
-/>
-          )}
-
-          {currentStep === 3 && (
-            <StepExtra
-              register={register}
-              watch={watch}
-            />
-          )}
-
-          {currentStep == (steps.length-1) ? (
+        { 
+          (send || false) && 
+          <>
+            <h3>Merci pour votre demande 🔑</h3>
+            <h4>L’équipe CLEAUTO vous recontactera très rapidement avec toutes les informations nécessaires.</h4>
+            <h4>À très bientôt,</h4>
+            <h3>L’équipe CLEAUTO</h3>
+          </> || 
+          (
             <>
-              <label className="agreement">
-                  <input 
-                    type="checkbox" 
-                    onClick={(el) => {
-                      setValue('agreementContent', el.currentTarget.checked ? agreementContentRef.current.innerHTML : "");
-                    }}
-                    { ... register('agreementStatus', { required: "Acceptez le traitement des informations" }) }
+              <Stepper steps={steps} currentStep={currentStep} />
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {currentStep === 0 && (
+                  <StepPersonal register={register} errors={errors} />
+                )}
+
+                {currentStep === 1 && (
+                  <StepCar 
+                    register={register} errors={errors} isHandFree={isHandFree} setValue={setValue}
                   />
-                  <span ref={agreementContentRef}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par Cleauto pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
-              </label>
-              { errors.agreementStatus && <><br /><p> { errors.agreementStatus.message } </p></> }
+                )}
+
+                {currentStep === 2 && (
+                  <StepRequest register={register} errors={errors} setValue={setValue} repairKeyRequest={repairKeyRequest} copyKeyRequest={copyKeyRequest} hasKeyWorks={hasKeyWorks} allKeyLostRequest={allKeyLostRequest} hasCarOpened={hasCarOpened}
+      />
+                )}
+
+                {currentStep === 3 && (
+                  <StepExtra
+                    register={register}
+                    watch={watch}
+                  />
+                )}
+
+                {currentStep == (steps.length-1) ? (
+                  <>
+                    <label className="agreement">
+                        <input 
+                          type="checkbox" 
+                          onClick={(el) => {
+                            setValue('agreementContent', el.currentTarget.checked ? agreementContentRef.current.innerHTML : "");
+                          }}
+                          { ... register('agreementStatus', { required: "Acceptez le traitement des informations" }) }
+                        />
+                        <span ref={agreementContentRef}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par Cleauto pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
+                    </label>
+                    { errors.agreementStatus && <><br /><p> { errors.agreementStatus.message } </p></> }
+                  </>
+
+                  ): <></>}
+
+                <div className="buttons">
+                  <button type="button" onClick={onPrev}>
+                    ← Précédent
+                  </button>
+
+                  {currentStep < steps.length - 1 ? (
+                    <button type="button" onClick={onNext}>
+                      Suivant →
+                    </button>
+                  ) : (
+                    <>
+                      <button type="submit">
+                        Envoyer la demande
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {currentStep == (steps.length-1) ? (
+                  <>
+                    <div className="confidentiality"><b>Confidentialité</b> : Les données collectées sont envoyées directement par email à Cleauto et ne sont pas enregistrées en base de données sur ce site. Elles sont utilisées exclusivement pour vous rappeler et traiter votre dossier. Une fois votre demande traitée, l'email contenant vos informations et photos (carte grise, clés) est définitivement supprimé. Vous pouvez exercer votre droit de suppression à tout moment en nous contactant.</div>
+                  </>
+                  ): <></>}
+              </form>
             </>
-
-            ): <></>}
-
-          <div className="buttons">
-            <button type="button" onClick={onPrev}>
-              ← Précédent
-            </button>
-
-            {currentStep < steps.length - 1 ? (
-              <button type="button" onClick={onNext}>
-                Suivant →
-              </button>
-            ) : (
-              <>
-                <button type="submit">
-                  Envoyer la demande
-                </button>
-              </>
-            )}
-          </div>
-
-          {currentStep == (steps.length-1) ? (
-            <>
-              <div className="confidentiality"><b>Confidentialité</b> : Les données collectées sont envoyées directement par email à Cleauto et ne sont pas enregistrées en base de données sur ce site. Elles sont utilisées exclusivement pour vous rappeler et traiter votre dossier. Une fois votre demande traitée, l'email contenant vos informations et photos (carte grise, clés) est définitivement supprimé. Vous pouvez exercer votre droit de suppression à tout moment en nous contactant.</div>
-            </>
-            ): <></>}
-        </form>
+          )
+        }
       </div>
     </>
   );
