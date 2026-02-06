@@ -16,7 +16,7 @@ const steps = [
 ];
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(0);
   const [send, setSend] = useState(false);
   const [submit, setSubmit] = useState(false);
 
@@ -185,16 +185,14 @@ export default function App() {
                     </button>
                   ) : (
                     <>
-                      {
-                        submit ?
-                        <BarLoader />
-                        :
-                        <button  
-                          type="submit"
-                        >
-                          Envoyer la demande
-                        </button>
-                      }
+                      <button type="submit" disabled={submit}>
+                        {
+                          submit ?
+                          <BarLoader />
+                          :
+                          <>Envoyer la demande</>
+                        }
+                      </button>
                     </>
                   )}
                 </div>
