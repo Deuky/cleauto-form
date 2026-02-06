@@ -132,7 +132,7 @@ button:active {
 button[type="button"] {
   background: #e5e7eb;
   color: #111827;
-  width: 33%;
+  width: 40%;
   max-width: 200px;
 
   white-space: nowrap;
@@ -343,4 +343,22 @@ input[name="firstRegistration"] {
 .header img {
   height: 85px;
   margin-bottom: 10px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.footer a {
+  text-decoration: none;
+  color: black;
+  font-size: small;
+}
+
+.footer .networking .logo {
+  width: 25px;
 }

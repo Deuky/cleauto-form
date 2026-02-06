@@ -1,7 +1,7 @@
 import { useState } from "react";
 import YesNoToggle from "../YesNoToggle"
 
-export default function StepRequest({ register, setValue, repairKeyRequest, copyKeyRequest, hasKeyWorks, allKeyLostRequest, hasCarOpened }) {
+export default function StepRequest({ register, setValue, repairKeyRequest, copyKeyRequest, hasCommandWorks, allKeyLostRequest, hasCarOpened }) {
   return (
     <>
       <h2>La demande</h2>
@@ -11,7 +11,7 @@ export default function StepRequest({ register, setValue, repairKeyRequest, copy
             onChange={(e, val) => {
               setValue("repairKeyRequest", val);
             }}
-            label="Réparation de la clef"
+            label="Réparation de la clef"f
           />
 
           <YesNoToggle
@@ -25,11 +25,11 @@ export default function StepRequest({ register, setValue, repairKeyRequest, copy
           {
             copyKeyRequest ?
               <YesNoToggle
-                value={hasKeyWorks}
+                value={hasCommandWorks}
                 onChange={(e, val) => {
-                  setValue("hasKeyWorks", val);
+                  setValue("hasCommandWorks", val);
                 }}
-                label="Une clef fonctionnelle ?"
+                label="Télécommande fonctionnelle ?"
               /> : <></>
           }
 
@@ -38,7 +38,7 @@ export default function StepRequest({ register, setValue, repairKeyRequest, copy
             onChange={(e, val) => {
               setValue("allKeyLostRequest", val);
             }}
-            label="Depanage: toutes clefs perdues"
+            label="Dépanage: toutes clefs perdues"
           />
           {
             allKeyLostRequest ?

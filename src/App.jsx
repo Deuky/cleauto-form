@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { BarLoader } from "react-spinners";
 
 import StepPersonal from "./components/steps/StepPersonal";
 import StepCar from "./components/steps/StepCar";
@@ -8,15 +9,16 @@ import StepExtra from "./components/steps/StepExtra";
 import Stepper from "./components/Stepper";
 
 const steps = [
-  { id: 0, title: "Infos personnelles", img: "/person.svg" },
-  { id: 1, title: "Voiture", img: "/car.svg" },
-  { id: 2, title: "La demande", img: "/key.svg" },
+  { id: 0, title: "Infos personnelles", img: "/person.svg",  },
+  { id: 1, title: "La demande", img: "/key.svg" },
+  { id: 2, title: "Infos voiture", img: "/car.svg" },
   { id: 3, title: "Infos supp.", img: "/plus.svg" },
 ];
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(3);
   const [send, setSend] = useState(false);
+  const [submit, setSubmit] = useState(false);
 
   const {
     register,
@@ -31,7 +33,7 @@ export default function App() {
   
   const repairKeyRequest = watch('repairKeyRequest', false);
   const copyKeyRequest = watch('copyKeyRequest', false);
-  const hasKeyWorks = watch('hasKeyWorks', false);
+  const hasCommandWorks = watch('hasCommandWorks', false);
   const allKeyLostRequest = watch('allKeyLostRequest', false);
   const hasCarOpened = watch('hasCarOpened', false);
   const agreementContent = watch('agreementContent', null);
@@ -52,6 +54,7 @@ export default function App() {
   }
 
   const onSubmit = async (data) => {
+    setSubmit(true);
     let form = new FormData();
     form.append('personal[name]', data.fullName);
     form.append('personal[phone]', data.phone);
@@ -66,6 +69,7 @@ export default function App() {
     } else {
       form.append('car[VIN]', data.VINCode);
     }
+    form.append('car[address]', data.address);
 
     form.append('key[is-hand-free]', data.isHandFree || false);
     if (data.key && data.key.length) {
@@ -74,7 +78,7 @@ export default function App() {
 
     form.append('request[repair-key]', data.repairKeyRequest || false);
     form.append('request[copy-key]', data.copyKeyRequest || false);
-    form.append('request[key-works]', data.hasKeyWorks || false);
+    form.append('request[command-works]', data.hasCommandWorks || false);
     form.append('request[all-key-lost]', data.allKeyLostRequest || false);
     form.append('request[car-opened]', data.hasCarOpened || false);
 
@@ -94,16 +98,13 @@ export default function App() {
     ).then(function(response, b, c) {
       const result = response.json().then(function(r) {
         setSend(true);
-        debugger;
       });
     });
-
-    debugger;
   };
 
   return (
     <>
-      <div className="container">CLEAUTO
+      <div className="container">
         <div className="header"><img src="/cleauto-logo.png" /></div>
 
         { 
@@ -123,14 +124,30 @@ export default function App() {
                 )}
 
                 {currentStep === 1 && (
-                  <StepCar 
-                    register={register} errors={errors} isHandFree={isHandFree} setValue={setValue}
+                  <StepRequest 
+                    register={register}
+                    errors={errors}
+                    setValue={setValue}
+                    repairKeyRequest={repairKeyRequest}
+                    copyKeyRequest={copyKeyRequest}
+                    hasCommandWorks={hasCommandWorks}
+                    allKeyLostRequest={allKeyLostRequest}
+                    hasCarOpened={hasCarOpened}
                   />
                 )}
 
                 {currentStep === 2 && (
-                  <StepRequest register={register} errors={errors} setValue={setValue} repairKeyRequest={repairKeyRequest} copyKeyRequest={copyKeyRequest} hasKeyWorks={hasKeyWorks} allKeyLostRequest={allKeyLostRequest} hasCarOpened={hasCarOpened}
-      />
+                  <StepCar
+                    register={register}
+                    errors={errors}
+                    setValue={setValue}
+                    isHandFree={isHandFree}
+                    repairKeyRequest={repairKeyRequest}
+                    copyKeyRequest={copyKeyRequest}
+                    hasCommandWorks={hasCommandWorks}
+                    allKeyLostRequest={allKeyLostRequest}
+                    hasCarOpened={hasCarOpened}
+                  />
                 )}
 
                 {currentStep === 3 && (
@@ -164,13 +181,20 @@ export default function App() {
 
                   {currentStep < steps.length - 1 ? (
                     <button type="button" onClick={onNext}>
-                      Suivant →
+                      Suivant →submitRef
                     </button>
                   ) : (
                     <>
-                      <button type="submit">
-                        Envoyer la demande
-                      </button>
+                      {
+                        submit ?
+                        <BarLoader />
+                        :
+                        <button  
+                          type="submit"
+                        >
+                          Envoyer la demande
+                        </button>
+                      }
                     </>
                   )}
                 </div>
@@ -184,6 +208,11 @@ export default function App() {
             </>
           )
         }
+      </div>
+
+      <div className="container footer">
+        <span className="website"><a href="https://www.cleauto.be">cleauto.be</a></span>
+        <span className="networking"><a href="https://www.facebook.com/profile.php?id=61566850178383"><img className="logo" src="facebook.svg" /></a></span>
       </div>
     </>
   );

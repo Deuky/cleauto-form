@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import YesNoToggle from "../YesNoToggle"
 
-export default function StepCar({ register, errors, isHandFree, setValue }) {
+export default function StepCar({ register, errors, isHandFree, setValue, allKeyLostRequest, hasCarOpened }) {
   const inputRefVIN = useRef(null);
   const inputRefKey = useRef(null);
   const [previewVIN, setPreviewVIN] = useState(null);
@@ -39,6 +39,8 @@ export default function StepCar({ register, errors, isHandFree, setValue }) {
     return r;
   };
 
+  const allKeyLostProcess = allKeyLostRequest && !hasCarOpened;
+
   const openCamera = (input) => {
     input.current.capture = 'environment';
     input.current.click();
@@ -53,35 +55,54 @@ export default function StepCar({ register, errors, isHandFree, setValue }) {
     <>
       <h2>Informations véhicule</h2>
 
-      <h3> Photo carte grise: Numéro de chassis (VIN) </h3>
-      <label className="input-notice">* Exemple: 1HGCM82633A123456</label>
+      {
+        allKeyLostRequest && 
+        (
+          <>
+            <input 
+              placeholder="Adresse de la voiture à dépanner"
+              {...register('address', {required: "Champ requis"})}
+            />
+            {errors.address && <p> {errors.address.message} </p> }
+          </>
+        )
+      }
 
-      <div className="vin">
+      {
+        !allKeyLostProcess && 
+        (
+          <>
+            <h3> Photo carte grise: Numéro de chassis (VIN) </h3>
+            <label className="input-notice">* Exemple: 1HGCM82633A123456</label>
+            <div className="vin">
 
-        <button
-          type="button"
-          onClick={() => openCamera(inputRefVIN)}
-        ><img src="/photo.svg" /></button>
+              <button
+                type="button"
+                onClick={() => openCamera(inputRefVIN)}
+              ><img src="/photo.svg" /></button>
 
-        <button
-          type="button"
-          onClick={() => openGallery(inputRefVIN)}
-        ><img src="/gallery.svg" /></button>
-        <div className="preview">
-          {
-            previewVIN ?
-                <img src={previewVIN}  alt="VIN preview" />
-              : <></>
-          }
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          {...registerWithRef('VIN', inputRefVIN, handleFileVIN)}
-        />
-        
-      </div>
+              <button
+                type="button"
+                onClick={() => openGallery(inputRefVIN)}
+              ><img src="/gallery.svg" /></button>
+              <div className="preview">
+                {
+                  previewVIN ?
+                      <img src={previewVIN}  alt="VIN preview" />
+                    : <></>
+                }
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                {...registerWithRef('VIN', inputRefVIN, handleFileVIN)}
+              />
+              
+            </div>
+          </>
+        )
+      }
 
       <h3> Modèle de la voiture <span>🚘</span> </h3>
 
@@ -98,21 +119,21 @@ export default function StepCar({ register, errors, isHandFree, setValue }) {
       {errors.model && <p> {errors.model.message} </p> }
 
       {
-        previewVIN ?
-          <></> :
-          <>
-            <input
-              placeholder="VIN"
-              maxLength={17}
-              {...register("VINCode", {
-                pattern: {
-                  value: /^[A-HJ-NPR-Z0-9]{17}$/i,
-                  message: "Numéro de châssis (VIN) invalide"
-                }
-              })}
-            />
-            {errors['VINCode'] && <p> {errors['VINCode'].message} </p> }
-          </> 
+        !allKeyLostProcess && 
+          !previewVIN &&
+            <>
+              <input
+                placeholder="VIN"
+                maxLength={17}
+                {...register("VINCode", {
+                  pattern: {
+                    value: /^[A-HJ-NPR-Z0-9]{17}$/i,
+                    message: "Numéro de châssis (VIN) invalide"
+                  }
+                })}
+              />
+              {errors['VINCode'] && <p> {errors['VINCode'].message} </p> }
+            </> 
       }
 
       <select {...register("fuel", { required: "Champ requis" })}>
@@ -131,33 +152,41 @@ export default function StepCar({ register, errors, isHandFree, setValue }) {
       <label className="input-notice">* premier imatriculation</label>
 
 
-      <h3> Photo de la clef <span>🔑</span></h3>
 
-      <div className="vin">
+      {
+        !allKeyLostRequest && 
+        (
+          <>
+            <h3> Photo de la clef <span>🔑</span></h3>
+            <div className="vin">
 
-        <button
-          type="button"
-          onClick={() => openCamera(inputRefKey)}
-        ><img src="/photo.svg" /></button>
-        <button
-          type="button"
-          onClick={() => openGallery(inputRefKey)}
-        ><img src="/gallery.svg" /></button>
-        <div className="preview">
-          {
-            previewKey ?
-                <img src={previewKey}  alt="preview Key" />
-              : <></>
-          }
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          { ...registerWithRef('key', inputRefKey, handleFileKey) }
-        />
+              <button
+                type="button"
+                onClick={() => openCamera(inputRefKey)}
+              ><img src="/photo.svg" /></button>
+              <button
+                type="button"
+                onClick={() => openGallery(inputRefKey)}
+              ><img src="/gallery.svg" /></button>
+              <div className="preview">
+                {
+                  previewKey ?
+                      <img src={previewKey}  alt="preview Key" />
+                    : <></>
+                }
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                { ...registerWithRef('key', inputRefKey, handleFileKey) }
+              />
 
-      </div>
+            </div>
+          </>
+        )
+      }
+      
 
       <YesNoToggle
         value={isHandFree}
