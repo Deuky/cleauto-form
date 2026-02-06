@@ -15,7 +15,7 @@ const steps = [
 ];
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(0);
   const [send, setSend] = useState(false);
 
   const {
@@ -103,7 +103,7 @@ export default function App() {
 
   return (
     <>
-      <div className="container">
+      <div className="container">CLEAUTO
         <div className="header"><img src="/cleauto-logo.png" /></div>
 
         { 
