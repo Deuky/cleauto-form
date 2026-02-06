@@ -181,7 +181,7 @@ export default function App() {
 
                   {currentStep < steps.length - 1 ? (
                     <button type="button" onClick={onNext}>
-                      Suivant →submitRef
+                      Suivant →
                     </button>
                   ) : (
                     <>
