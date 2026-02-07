@@ -42,12 +42,12 @@ export default function StepCar({ register, errors, isHandFree, setValue, allKey
   const allKeyLostProcess = allKeyLostRequest && !hasCarOpened;
 
   const openCamera = (input) => {
-    input.current.capture = 'environment';
+    input.current.setAttribute('capture', 'environment');
     input.current.click();
   };
 
   const openGallery = (input) => {
-    input.current.capture = undefined;
+    input.current.removeAttribute('capture');
     input.current.click();
   };
 
