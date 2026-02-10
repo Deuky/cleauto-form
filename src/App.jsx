@@ -209,6 +209,7 @@ export default function App() {
       </div>
 
       <div className="container footer">
+        <span className="copyright">&copy; Copyright {new Date().getFullYear()} CLEAUTO</span>
         <span className="website"><a href="https://www.cleauto.be">cleauto.be</a></span>
         <span className="networking"><a href="https://www.facebook.com/profile.php?id=61566850178383"><img className="logo" src="facebook.svg" /></a></span>
       </div>
