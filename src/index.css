@@ -351,6 +351,11 @@ input[name="firstRegistration"] {
   align-items: center;
   padding-top: 20px;
   padding-bottom: 20px;
+  gap: 20px;
+}
+
+.footer > * {
+  width: 100%;
 }
 
 .footer a {
@@ -361,4 +366,21 @@ input[name="firstRegistration"] {
 
 .footer .networking .logo {
   width: 25px;
+}
+
+.copyright {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.website {
+  text-align: center;
+}
+
+.footer .website a {
+  text-decoration: underline;
+}
+
+.footer .networking {
+  text-align: right;
 }
