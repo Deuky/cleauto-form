@@ -354,6 +354,10 @@ input[name="firstRegistration"] {
   gap: 20px;
 }
 
+.footer > * {
+  width: 100%;
+}
+
 .footer a {
   text-decoration: none;
   color: black;
@@ -367,4 +371,16 @@ input[name="firstRegistration"] {
 .copyright {
   font-size: 0.75rem;
   color: #6b7280;
+}
+
+.website {
+  text-align: center;
+}
+
+.footer .website a {
+  text-decoration: underline;
+}
+
+.footer .networking {
+  text-align: right;
 }
