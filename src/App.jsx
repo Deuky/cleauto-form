@@ -167,7 +167,7 @@ export default function App() {
                           }}
                           { ... register('agreementStatus', { required: "Acceptez le traitement des informations" }) }
                         />
-                        <span ref={agreementContentRef}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par Cleauto pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
+                        <span ref={agreementContentRef}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par cleauto.be pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
                     </label>
                     { errors.agreementStatus && <><br /><p> { errors.agreementStatus.message } </p></> }
                   </>
@@ -199,7 +199,7 @@ export default function App() {
 
                 {currentStep == (steps.length-1) ? (
                   <>
-                    <div className="confidentiality"><b>Confidentialité</b> : Les données collectées sont envoyées directement par email à Cleauto et ne sont pas enregistrées en base de données sur ce site. Elles sont utilisées exclusivement pour vous rappeler et traiter votre dossier. Une fois votre demande traitée, l'email contenant vos informations et photos (carte grise, clés) est définitivement supprimé. Vous pouvez exercer votre droit de suppression à tout moment en nous contactant.</div>
+                    <div className="confidentiality"><b>Confidentialité</b> : Les données collectées sont envoyées directement par email à cleauto.be et ne sont pas enregistrées en base de données sur ce site. Elles sont utilisées exclusivement pour vous rappeler et traiter votre dossier. Une fois votre demande traitée, l'email contenant vos informations et photos (carte grise, clés) est définitivement supprimé. Vous pouvez exercer votre droit de suppression à tout moment en nous contactant.</div>
                   </>
                   ): <></>}
               </form>
