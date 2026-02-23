@@ -139,9 +139,10 @@ export default function StepCar({ register, errors, isHandFree, setValue, allKey
       <select {...register("fuel", { required: "Champ requis" })}>
         <option value="">Carburant</option>
         <option value="diesel">Diesel</option>
-        <option value="essence">Essence</option>
-        <option value="hybride">Hybride</option>
-        <option value="electrique">Électrique</option>
+        <option value="petrol">Essence</option>
+        <option value="hybrid">Hybride</option>
+        <option value="electric">Électrique</option>
+        <option value="gas">Gaz</option>
       </select>
       {errors.fuel && <p> {errors.fuel.message} </p> }
 
