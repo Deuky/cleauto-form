@@ -63,7 +63,7 @@ export default function App() {
     form.append('car[brand]', data.brand);
     form.append('car[model]', data.model);
     form.append('car[fuel]', data.fuel);
-    form.append('car[first-registration]', data.firstRegistration);
+    form.append('car[firstRegistration]', data.firstRegistration);
     if (data.VIN && data.VIN.length) {
       form.append('car[attachments][]', data.VIN[0]);
     } else {
@@ -71,22 +71,22 @@ export default function App() {
     }
     form.append('car[address]', data.address);
 
-    form.append('key[is-hand-free]', data.isHandFree || false);
+    form.append('key[isHandFree]', data.isHandFree || false);
     if (data.key && data.key.length) {
       form.append('key[attachments][]', data.key[0]);
     }
 
-    form.append('request[repair-key]', data.repairKeyRequest || false);
-    form.append('request[copy-key]', data.copyKeyRequest || false);
-    form.append('request[command-works]', data.hasCommandWorks || false);
-    form.append('request[all-key-lost]', data.allKeyLostRequest || false);
-    form.append('request[car-opened]', data.hasCarOpened || false);
+    form.append('request[repairKey]', data.repairKeyRequest || false);
+    form.append('request[copyKey]', data.copyKeyRequest || false);
+    form.append('request[commandWorks]', data.hasCommandWorks || false);
+    form.append('request[allKeyLost]', data.allKeyLostRequest || false);
+    form.append('request[carOpened]', data.hasCarOpened || false);
 
     form.append('extra[informations]', data.extraInfo);
 
     form.append('agreement[rgpd][status]', data.agreementStatus);
     form.append('agreement[rgpd][content]', data.agreementContent);
-    form.append('agreement[rgpd][request-date]', new Date().toLocaleString());
+    form.append('agreement[rgpd][requestDate]', new Date().toLocaleString());
     form.append('agreement[rgpd][url]', document.URL);
 
     fetch(
