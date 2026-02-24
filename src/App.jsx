@@ -55,6 +55,7 @@ export default function App() {
 
   const onSubmit = async (data) => {
     setSubmit(true);
+    let requestDate = new Date();
     let form = new FormData();
     form.append('personal[name]', data.fullName);
     form.append('personal[phone]', data.phone);
@@ -63,7 +64,7 @@ export default function App() {
     form.append('car[brand]', data.brand);
     form.append('car[model]', data.model);
     form.append('car[fuel]', data.fuel);
-    form.append('car[first-registration]', data.firstRegistration);
+    form.append('car[firstRegistration]', data.firstRegistration);
     if (data.VIN && data.VIN.length) {
       form.append('car[attachments][]', data.VIN[0]);
     } else {
@@ -71,22 +72,22 @@ export default function App() {
     }
     form.append('car[address]', data.address);
 
-    form.append('key[is-hand-free]', data.isHandFree || false);
+    form.append('key[isHandFree]', data.isHandFree || false);
     if (data.key && data.key.length) {
       form.append('key[attachments][]', data.key[0]);
     }
 
-    form.append('request[repair-key]', data.repairKeyRequest || false);
-    form.append('request[copy-key]', data.copyKeyRequest || false);
-    form.append('request[command-works]', data.hasCommandWorks || false);
-    form.append('request[all-key-lost]', data.allKeyLostRequest || false);
-    form.append('request[car-opened]', data.hasCarOpened || false);
+    form.append('request[repairKey]', data.repairKeyRequest || false);
+    form.append('request[copyKey]', data.copyKeyRequest || false);
+    form.append('request[commandWorks]', data.hasCommandWorks || false);
+    form.append('request[allKeyLost]', data.allKeyLostRequest || false);
+    form.append('request[carOpened]', data.hasCarOpened || false);
 
     form.append('extra[informations]', data.extraInfo);
 
     form.append('agreement[rgpd][status]', data.agreementStatus);
     form.append('agreement[rgpd][content]', data.agreementContent);
-    form.append('agreement[rgpd][request-date]', new Date().toLocaleString());
+    form.append('agreement[rgpd][requestDate]', [requestDate.getFullYear(), ('0'+(requestDate.getMonth()+1)).slice(-2), ('0'+requestDate.getDate()).slice(-2)].join('-') + ' ' + requestDate.toLocaleTimeString() );
     form.append('agreement[rgpd][url]', document.URL);
 
     fetch(
@@ -111,9 +112,9 @@ export default function App() {
           (send || false) && 
           <>
             <h3>Merci pour votre demande 🔑</h3>
-            <h4>L’équipe CLEAUTO vous recontactera très rapidement avec toutes les informations nécessaires.</h4>
+            <h4>L’équipe CLEAUTO.be vous recontactera très rapidement avec toutes les informations nécessaires.</h4>
             <h4>À très bientôt,</h4>
-            <h3>L’équipe CLEAUTO</h3>
+            <h3>L’équipe CLEAUTO.be</h3>
           </> || 
           (
             <>
@@ -167,7 +168,7 @@ export default function App() {
                           }}
                           { ... register('agreementStatus', { required: "Acceptez le traitement des informations" }) }
                         />
-                        <span ref={agreementContentRef}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par Cleauto pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
+                        <span ref={agreementContentRef}>J'accepte que les informations saisies, y compris les photos de ma carte grise et de mes clés, soient utilisées par cleauto.be pour me recontacter et traiter ma demande. Je reconnais avoir pris connaissance que mes données seront supprimées une fois mon dossier clôturé.</span>
                     </label>
                     { errors.agreementStatus && <><br /><p> { errors.agreementStatus.message } </p></> }
                   </>
@@ -199,7 +200,7 @@ export default function App() {
 
                 {currentStep == (steps.length-1) ? (
                   <>
-                    <div className="confidentiality"><b>Confidentialité</b> : Les données collectées sont envoyées directement par email à Cleauto et ne sont pas enregistrées en base de données sur ce site. Elles sont utilisées exclusivement pour vous rappeler et traiter votre dossier. Une fois votre demande traitée, l'email contenant vos informations et photos (carte grise, clés) est définitivement supprimé. Vous pouvez exercer votre droit de suppression à tout moment en nous contactant.</div>
+                    <div className="confidentiality"><b>Confidentialité</b> : Les données collectées sont envoyées directement par email à cleauto.be et ne sont pas enregistrées en base de données sur ce site. Elles sont utilisées exclusivement pour vous rappeler et traiter votre dossier. Une fois votre demande traitée, l'email contenant vos informations et photos (carte grise, clés) est définitivement supprimé. Vous pouvez exercer votre droit de suppression à tout moment en nous contactant.</div>
                   </>
                   ): <></>}
               </form>
@@ -209,7 +210,7 @@ export default function App() {
       </div>
 
       <div className="container footer">
-        <span className="copyright">&copy; Copyright {new Date().getFullYear()} CLEAUTO</span>
+        <span className="copyright">&copy; Copyright {new Date().getFullYear()} CLEAUTO.be</span>
         <span className="website"><a href="https://www.cleauto.be">cleauto.be</a></span>
         <span className="networking"><a href="https://www.facebook.com/profile.php?id=61566850178383"><img className="logo" src="facebook.svg" /></a></span>
       </div>
