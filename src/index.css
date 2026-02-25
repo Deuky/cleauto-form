@@ -384,3 +384,95 @@ input[name="firstRegistration"] {
 .footer .networking {
   text-align: right;
 }
+
+/* =========================
+   Formulaire de dépannage
+========================= */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 12px;
+}
+
+.signature-container {
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  margin-bottom: 12px;
+}
+
+.signature-container canvas {
+  display: block;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.signature-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s, transform 0.1s;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #ffffff;
+  flex: 1;
+  max-width: 300px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.btn-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #111827;
+  width: auto;
+}
+
+.btn-secondary:hover {
+  background: #d1d5db;
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+  transform: scale(0.98);
+}
