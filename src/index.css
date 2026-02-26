@@ -476,3 +476,34 @@ input[name="firstRegistration"] {
 .btn-secondary:active {
   transform: scale(0.98);
 }
+
+.signature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.signature-header label {
+  margin-bottom: 0;
+}
+
+.btn-clear {
+  padding: 8px 16px;
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-clear:hover {
+  background: #dc2626;
+}
+
+.btn-clear:active {
+  transform: scale(0.98);
+}

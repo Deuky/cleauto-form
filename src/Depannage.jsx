@@ -140,7 +140,16 @@ export default function Depannage() {
         />
 
         <div className="form-group">
-          <label>Signature *</label>
+          <div className="signature-header">
+            <label>Signature *</label>
+            <button 
+              type="button" 
+              onClick={() => signatureRef.current?.clear()}
+              className="btn-clear"
+            >
+              Effacer
+            </button>
+          </div>
           <div className="signature-container">
             <Signature ref={signatureRef} width={400} height={200} />
           </div>
