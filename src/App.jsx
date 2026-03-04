@@ -1,12 +1,14 @@
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { BarLoader } from "react-spinners";
 
 import StepPersonal from "./components/steps/StepPersonal";
 import StepCar from "./components/steps/StepCar";
 import StepRequest from "./components/steps/StepRequest";
 import StepExtra from "./components/steps/StepExtra";
 import Stepper from "./components/Stepper";
+
+import PanelNavigation from "./components/panels/PanelNavigation";
+import PanelConfidentiality from "./components/panels/PanelConfidentiality";
 
 const steps = [
   { id: 0, title: "Infos personnelles", img: "/person.svg",  },
@@ -175,34 +177,17 @@ export default function App() {
 
                   ): <></>}
 
-                <div className="buttons">
-                  <button type="button" onClick={onPrev}>
-                    ← Précédent
-                  </button>
-
-                  {currentStep < steps.length - 1 ? (
-                    <button type="button" onClick={onNext}>
-                      Suivant →
-                    </button>
-                  ) : (
-                    <>
-                      <button type="submit" disabled={submit}>
-                        {
-                          submit ?
-                          <BarLoader />
-                          :
-                          <>Envoyer la demande</>
-                        }
-                      </button>
-                    </>
-                  )}
-                </div>
+                <PanelNavigation
+                  steps={steps}
+                  currentStep={currentStep}
+                  onNext={onNext}
+                  onPrev={onPrev}
+                  submit={submit}
+                />
 
                 {currentStep == (steps.length-1) ? (
-                  <>
-                    <div className="confidentiality"><b>Confidentialité</b> : Les données collectées sont envoyées directement par email à cleauto.be et ne sont pas enregistrées en base de données sur ce site. Elles sont utilisées exclusivement pour vous rappeler et traiter votre dossier. Une fois votre demande traitée, l'email contenant vos informations et photos (carte grise, clés) est définitivement supprimé. Vous pouvez exercer votre droit de suppression à tout moment en nous contactant.</div>
-                  </>
-                  ): <></>}
+                  <PanelConfidentiality />
+                ): <></>}
               </form>
             </>
           )
