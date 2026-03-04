@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/immutability */
 import React, { useRef, useState, useEffect } from "react";
 
 export default function FilePicker({ name, label, register, validation, errors, accept = "image/*", onPreview }) {
@@ -9,13 +8,17 @@ export default function FilePicker({ name, label, register, validation, errors, 
   const { ref: originalRef, onChange: originalOnChange, ...rest } = reg;
 
   useEffect(() => {
-    if (!originalRef) return;
+    if (!originalRef) {
+      return;
+    }
+
     if (typeof originalRef === "function") {
       originalRef(inputRef.current);
       return () => originalRef(null);
     }
-    // originalRef is object
+
     originalRef.current = inputRef.current;
+    
     return () => {
       originalRef.current = null;
     };
