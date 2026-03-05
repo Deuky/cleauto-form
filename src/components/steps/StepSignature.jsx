@@ -24,7 +24,7 @@ export default function StepSignature({ register, setValue, errors }) {
       return;
     }
 
-    setValue('signature', signatureRef.current.svg.outerHTML);
+    setValue('signature', signatureRef.current.svg);
   }
 
   function clear() {
