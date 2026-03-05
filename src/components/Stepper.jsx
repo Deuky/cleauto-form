@@ -7,7 +7,7 @@ export default function Stepper({ steps, currentStep }) {
           className={`step ${index <= currentStep ? "active" : ""}`}
         >
           <span>{step.title}</span>
-          <img src={step.img} />
+          {step.img && <img src={step.img} alt="" />}
         </div>
       ))}
     </div>
