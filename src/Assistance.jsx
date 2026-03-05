@@ -35,12 +35,6 @@ export default function Assistance() {
   const agreementContent = watch('agreementContent', null);
 
   const onSubmit = async (data) => {
-    // si on n'est pas à la dernière étape, on avance et laisse le formulaire intact
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((s) => s + 1);
-      return;
-    }
-
     setSubmit(true);
     let requestDate = new Date();
 
@@ -82,31 +76,14 @@ export default function Assistance() {
 
   const onNext = async () => {
     const valid = await trigger();
-    if (valid) setCurrentStep((s) => {
-      s = s + 1
-      let step = steps.find((step) => step.id == s)
-      if (step.title == "Signature") {
-        setValue('signature', null);
-      }
-      return s;
-    })
+    if (valid) setCurrentStep((s) => s + 1)
   };
 
   const onPrev = () => {
     if (currentStep <= 0) {
       return;
     }
-    setCurrentStep((s) => {
-      s = s - 1;
-
-      let step = steps.find((step) => step.id == s)
-      if (step.title == "Signature") {
-        setValue('signature', null);
-      } else if (step.id < signatureStep.id) {
-        unregister('signature');
-      }
-      return s;
-    }); 
+    setCurrentStep((s) => s - 1);
     setValue('agreementStatus', false);
   }
 

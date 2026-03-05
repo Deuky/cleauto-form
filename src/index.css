@@ -511,4 +511,5 @@ input[name="firstRegistration"] {
 .signature-container {
   height: 300px;
   width: 650px;
+  margin: auto;
 }

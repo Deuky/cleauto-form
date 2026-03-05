@@ -1,13 +1,35 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Signature from "@uiw/react-signature";
 
 export default function StepSignature({ register, setValue, errors }) {
   const signatureRef = useRef(null);
+  const reg = register('signature', {
+    required: "Veuillez signer"
+  });
+  const {ref} = reg;
+  useEffect(() => {
+    if (!signatureRef?.current?.svg?.childElementCount) {
+      setValue('signature', null);
 
-  register('signature', {required: "Veuillez signer"});
+      return;
+    }
 
-  function onClick() {
-    setValue('signature', signatureRef.current.svg)
+    return () => {
+      setValue('signature', null);
+    }
+  }, [signatureRef]);
+
+  function handleEnd(e) {
+    if (!signatureRef?.current) {
+      return;
+    }
+
+    setValue('signature', signatureRef.current.svg.outerHTML);
+  }
+
+  function clear() {
+    ref?.current?.clear();
+    setValue('signature', null);
   }
 
   return ( 
@@ -16,21 +38,25 @@ export default function StepSignature({ register, setValue, errors }) {
         <label>Signature *</label>
         <button 
           type="button" 
-          onClick={() => signatureRef.current?.clear()}
           className="btn-clear"
+          onClick={clear}
         >
           Effacer
         </button>
       </div>
       <div className="signature-container">
         <Signature 
-          ref={signatureRef} 
           width={650} 
           height={300} 
-          onClick={onClick}
+          onClick={handleEnd}
           viewBox="0 0 650 300"
+          ref={signatureRef}
         />
       </div>
+      <input 
+        hidden 
+        {...reg}
+      />
       { errors.signature && <><br /><p> { errors.signature.message } </p></> }
     </div>
   );
